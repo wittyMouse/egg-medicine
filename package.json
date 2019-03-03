@@ -1,0 +1,27 @@
+{
+  "name": "medicine",
+  "version": "1.0.0",
+  "description": "medicine",
+  "private": true,
+  "scripts": {
+    "dev": "egg-bin dev",
+    "test": "egg-bin test",
+    "cov": "egg-bin cov"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wittyMouse/egg-medicine"
+  },
+  "keywords": [],
+  "author": "wittyMouse",
+  "license": "ISC",
+  "dependencies": {
+    "egg": "^2.19.0",
+    "egg-mysql": "^3.0.0",
+    "egg-validate": "^2.0.2"
+  },
+  "devDependencies": {
+    "egg-bin": "^4.11.0",
+    "egg-mock": "^3.21.0"
+  }
+}
