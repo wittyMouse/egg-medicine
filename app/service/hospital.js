@@ -12,6 +12,11 @@ class HospitalService extends Service {
       };
     }
   }
+  
+  async show(id) {
+    const result = await this.app.mysql.get('hospital', { hospital_id: id });
+    return result;
+  }
 
   async destroy(id) {
     const result = await this.app.mysql.delete('hospital', { hospital_id: id });
@@ -41,11 +46,6 @@ class HospitalService extends Service {
       }
     }
     const result = await this.app.mysql.query(sql, array);
-    return result;
-  }
-
-  async show(id) {
-    const result = await this.app.mysql.get('department', { department_id: id });
     return result;
   }
 }

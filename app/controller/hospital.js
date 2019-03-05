@@ -21,6 +21,13 @@ class HospitalController extends Controller {
     ctx.status = 200;
   }
 
+  async show() {
+    const ctx = this.ctx;
+    const result = await ctx.service.hospital.show(ctx.params.id);
+    ctx.body = result;
+    ctx.status = 200;
+  }
+
   async destroy() {
     const ctx = this.ctx;
     const result = await ctx.service.hospital.destroy(ctx.params.id);
