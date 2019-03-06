@@ -3,7 +3,7 @@
 const Controller = require('egg').Controller;
 
 const geocoderRule = {
-  address: 'string'
+  tag: 'string'
 };
 
 const loginRule = {
@@ -14,7 +14,7 @@ class CommonController extends Controller {
   async geocoder() {
     const { ctx } = this;
     ctx.validate(geocoderRule, ctx.request.query);
-    const result = await ctx.service.common.geocoder(ctx.request.query.address);
+    const result = await ctx.service.common.geocoder(ctx.request.query);
     ctx.body = result;
     ctx.status = 200;
   }

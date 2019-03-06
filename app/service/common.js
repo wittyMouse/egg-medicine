@@ -4,15 +4,28 @@ const Service = require("egg").Service;
 const crypto = require("crypto");
 
 class CommonService extends Service {
-  async geocoder(address) {
+  async geocoder(params) {
+    let data = "";
+    if (params.tag == 'forward') {
+      // 地址转经纬度
+      data = {
+        address: params.address,
+        output: "json",
+        ak: this.config.ak
+      }
+    } else if (params.tag == 'reverse') {
+      // 经纬度转地址
+      data = {
+        location: params.location,
+        coordtype: params.coordtype,
+        ak: this.config.ak,
+        output: 'json'
+      }
+    }
     const result = await this.app.curl(
       "http://api.map.baidu.com/geocoder/v2/",
       {
-        data: {
-          address,
-          output: "json",
-          ak: this.config.ak
-        }
+        data
       }
     );
     if (result.status === 200) {
