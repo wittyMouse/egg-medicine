@@ -21,5 +21,6 @@ module.exports = app => {
 
   // 用户
   router.resources('users', '/users', controller.users);
+  router.get('/get_userinfo', controller.users.get_userinfo);
   
 };

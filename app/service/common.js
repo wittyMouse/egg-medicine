@@ -50,7 +50,13 @@ class CommonService extends Service {
       if (data.openid) {
         let md5 = crypto.createHash("md5");
         let token = md5.update(data.session_key + this.config.appSecret).digest("hex");
-        const res = await this.app.mysql.insert("wx_token", { open_id: data.openid, union_id: data.unionid || "", token, session_key: data.session_key });
+        const isExists = await this.app.mysql.get("wx_token", { open_id: data.openid });
+        let res = "";
+        if (typeof isExists === 'object') {
+          res = await this.app.mysql.update("wx_token", { union_id: data.unionid || "", token, session_key: data.session_key, last_visit_time: this.app.mysql.literals.now }, { where: { open_id: data.openid } });
+        } else {
+          res = await this.app.mysql.insert("wx_token", { open_id: data.openid, union_id: data.unionid || "", token, session_key: data.session_key });
+        }
         if (res.affectedRows === 1) {
           return {
             token,

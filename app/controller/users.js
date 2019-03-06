@@ -26,10 +26,22 @@ class UsersController extends Controller {
     ctx.status = 200;
   }
   async edit() {}
-  async update() {}
+  async update() {
+    const ctx = this.ctx;
+    ctx.validate(usersRule, ctx.request.body);
+    const result = await ctx.service.users.create(ctx.request.body);
+    ctx.body = result;
+    ctx.status = 200;
+  }
   async destroy() {
     const ctx = this.ctx;
     const result = await ctx.service.users.destroy(ctx.params.id);
+    ctx.body = result;
+    ctx.status = 200;
+  }
+  async get_userinfo() {
+    const ctx = this.ctx;
+    const result = await ctx.service.users.get_userinfo(ctx.request.query.token);
     ctx.body = result;
     ctx.status = 200;
   }
