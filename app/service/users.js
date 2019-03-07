@@ -1,6 +1,7 @@
 'use strict';
 
 const Service = require('egg').Service;
+const WXBizDataCrypt = require('../lib/WXBizDataCrypt');
 
 class UsersService extends Service {
   async create(params) {
@@ -36,6 +37,36 @@ class UsersService extends Service {
       return { data: { open_id: id }, msg: '删除成功', status: 0 };
     } else {
       return { msg: '删除失败', status: 1 };
+    }
+  }
+
+  async set_userinfo(params) {
+    let row = await this.app.mysql.get('wx_token', { token: params.token });
+    if (row != undefined) {
+      let res = this.show(row.open_id);
+      if (res.status == 1) {
+        let data = new WXBizDataCrypt(row.app_id, row.session_key).decryptData(params.encryptedData, params.iv);
+        if (data.watermark.appid == this.config.appId) {
+          data = {
+            open_id: row.open_id,
+            union_id: data.unionId,
+            nick_name: data.nickName,
+            gender: data.gender,
+            language: data.language,
+            city: data.city,
+            province: data.province,
+            country: data.country,
+            avatar_url: data.avatarUrl
+          }
+          return this.create(data);
+        } else {
+          return { msg: '解密错误，添加失败', status: 1 };
+        }
+      } else {
+        return { msg: '该用户已存在', status: 1 };
+      }
+    } else {
+      return { msg: 'token有误', status: 1 };
     }
   }
 
