@@ -22,6 +22,6 @@ module.exports = app => {
   // 用户
   router.resources('users', '/users', controller.users);
   router.post('/users/set_userinfo', controller.users.set_userinfo);
-  router.get('/users/get_userinfo', controller.users.get_userinfo);
+  router.post('/users/get_userinfo', controller.users.get_userinfo);
   
 };

@@ -2,6 +2,7 @@
 
 const Service = require('egg').Service;
 const WXBizDataCrypt = require('../lib/WXBizDataCrypt');
+const utils = require('../lib/utils');
 
 class UsersService extends Service {
   async create(params) {
@@ -43,9 +44,9 @@ class UsersService extends Service {
   async set_userinfo(params) {
     let row = await this.app.mysql.get('wx_token', { token: params.token });
     if (row != undefined) {
-      let res = this.show(row.open_id);
+      let res = await this.show(row.open_id);
       if (res.status == 1) {
-        let data = new WXBizDataCrypt(row.app_id, row.session_key).decryptData(params.encryptedData, params.iv);
+        let data = new WXBizDataCrypt(this.config.appId, row.session_key).decryptData(params.encryptedData, params.iv);
         if (data.watermark.appid == this.config.appId) {
           data = {
             open_id: row.open_id,
@@ -73,7 +74,11 @@ class UsersService extends Service {
   async get_userinfo(token) {
     let row = await this.app.mysql.get('wx_token', { token });
     if (row != undefined) {
-      return this.show(row.open_id);
+      let result = await this.show(row.open_id);
+      if (result.status == 0) {
+        result.data = utils.objectUSTC(result.data);
+      }
+      return result;
     } else {
       return { msg: 'token有误', status: 1 };
     }

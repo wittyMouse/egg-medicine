@@ -55,7 +55,7 @@ class UsersController extends Controller {
 
   async get_userinfo() {
     const ctx = this.ctx;
-    const result = await ctx.service.users.get_userinfo(ctx.request.query.token);
+    const result = await ctx.service.users.get_userinfo(ctx.request.body.token);
     ctx.body = result;
     ctx.status = 200;
   }
