@@ -26,5 +26,4 @@ module.exports = app => {
   router.resources('users', '/users', controller.users);
   router.post('/users/set_userinfo', controller.users.set_userinfo);
   router.post('/users/get_userinfo', controller.users.get_userinfo);
-
 };
