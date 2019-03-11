@@ -75,7 +75,7 @@ class UsersService extends Service {
     if (row != undefined) {
       return this.show(row.open_id);
     } else {
-      return { msg: 'token有误', status: 1 };
+      return { msg: 'token有误，或没有信息', status: 1 };
     }
   }
 }

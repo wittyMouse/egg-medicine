@@ -2,6 +2,8 @@
 
 const Service = require("egg").Service;
 const crypto = require("crypto");
+const fs = require("fs");
+const path = require('path');
 
 class CommonService extends Service {
   async geocoder(params) {
@@ -55,7 +57,7 @@ class CommonService extends Service {
         if (typeof isExists === 'object') {
           res = await this.app.mysql.update("wx_token", { union_id: data.unionid || "", token, session_key: data.session_key, last_visit_time: this.app.mysql.literals.now }, { where: { open_id: data.openid } });
         } else {
-          res = await this.app.mysql.insert("wx_token", { open_id: data.openid, union_id: data.unionid || "", token, session_key: data.session_key });
+          res = await this.app.mysql.insert("wx_token", { open_id: data.opegnid, union_id: data.unionid || "", token, session_key: data.session_key });
         }
         if (res.affectedRows === 1) {
           return {
@@ -70,6 +72,12 @@ class CommonService extends Service {
         }
       }
     }
+  }
+
+  async upload(stream) {
+    const suffix = stream.filename.match(/\.[^\.]+$/g)[0];
+    const target = path.join(this.config.baseDir, 'app/public/upload', Data.now() + '.' + suffix);
+    // return { data: , status: 1 };
   }
 }
 
