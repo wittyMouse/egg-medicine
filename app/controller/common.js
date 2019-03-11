@@ -29,7 +29,7 @@ class CommonController extends Controller {
 
   async upload() {
     const { ctx } = this;
-    let stream = await ctx.getFileStream();
+    const stream = await ctx.getFileStream();
     const result = await ctx.service.common.upload(stream);
     ctx.body = result;
     ctx.status = 200;

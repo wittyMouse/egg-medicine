@@ -4,6 +4,7 @@ const Service = require("egg").Service;
 const crypto = require("crypto");
 const fs = require("fs");
 const path = require('path');
+const pump = require('mz-modules/pump');
 
 class CommonService extends Service {
   async geocoder(params) {
@@ -76,8 +77,10 @@ class CommonService extends Service {
 
   async upload(stream) {
     const suffix = stream.filename.match(/\.[^\.]+$/g)[0];
-    const target = path.join(this.config.baseDir, 'app/public/upload', Data.now() + '.' + suffix);
-    // return { data: , status: 1 };
+    const target = path.join(this.config.baseDir, 'app/public/upload', Date.now() + suffix);
+    const writeStream = fs.createWriteStream(target);
+    await pump(stream, writeStream);
+    return { data: { url: target }, status: 1 };
   }
 }
 
