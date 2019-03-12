@@ -15,7 +15,7 @@ const hospitalRule = {
 class HospitalController extends Controller {
   async create() {
     const ctx = this.ctx;
-    ctx.validate(hospitalRule, ctx.request.body);
+    // ctx.validate(hospitalRule, ctx.request.body);
     const result = await ctx.service.hospital.create(ctx.request.body);
     ctx.body = result;
     ctx.status = 200;
@@ -24,6 +24,13 @@ class HospitalController extends Controller {
   async show() {
     const ctx = this.ctx;
     const result = await ctx.service.hospital.show(ctx.params.id);
+    ctx.body = result;
+    ctx.status = 200;
+  }
+
+  async update() {
+    const ctx = this.ctx;
+    const result = await ctx.service.hospital.update(ctx.params.id, ctx.request.body);
     ctx.body = result;
     ctx.status = 200;
   }

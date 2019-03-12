@@ -80,7 +80,7 @@ class CommonService extends Service {
     const target = path.join(this.config.baseDir, 'app/public/upload', Date.now() + suffix);
     const writeStream = fs.createWriteStream(target);
     await pump(stream, writeStream);
-    return { data: { url: target }, status: 1 };
+    return { data: { url: target }, msg: '上传成功', status: 1 };
   }
 }
 
