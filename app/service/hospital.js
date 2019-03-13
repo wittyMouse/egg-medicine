@@ -13,7 +13,7 @@ class HospitalService extends Service {
       let res = await this.ctx.service.common.geocoder({ address: data.address, tag: 'forward' });
       if (res.status == 0) {
         data.latitude = res.result.location.lat;
-        data.longitude = res.result.location.lng;  
+        data.longitude = res.result.location.lng;
       } else {
         return { msg: '地址解析失败', status: 1 };
       }
@@ -25,7 +25,7 @@ class HospitalService extends Service {
       return { msg: '添加失败', status: 1 }
     }
   }
-  
+
   async show(id) {
     const result = await this.app.mysql.get('hospital', { hospital_id: id });
     return { data: result, status: 0 };
@@ -33,6 +33,15 @@ class HospitalService extends Service {
 
   async update(id, params) {
     let data = utils.objectCTUS(params);
+    if (data.address && (!(data.latitude && data.longitude))) {
+      let res = await this.ctx.service.common.geocoder({ address: data.address, tag: 'forward' });
+      if (res.status == 0) {
+        data.latitude = res.result.location.lat;
+        data.longitude = res.result.location.lng;
+      } else {
+        return { msg: '地址解析失败', status: 1 };
+      }
+    }
     const result = await this.app.mysql.update('hospital', data, { where: { hospital_id: id } });
     if (result.affectedRows === 1) {
       return { msg: '更新成功', status: 0 };
@@ -67,6 +76,23 @@ class HospitalService extends Service {
     }
     const result = await this.app.mysql.query(sql, array);
     return { data: result, status: 0 };
+  }
+
+  async destroy(id) {
+    const result = await this.app.mysql.delete('hospital', { hospital_id: id });
+    if (result.affectedRows === 1) {
+      return { hospital_id: id, msg: '删除成功', status: 0 };
+    }
+  }
+
+  async hosp_delete(params) {
+    const { ids } = params;
+    const result = await this.app.mysql.delete('hospital', { hospital_id: ids.split(',') });
+    if (result.affectedRows === 1) {
+      return { msg: '删除成功', status: 0 };
+    } else {
+      return { msg: '删除失败', status: 1 };
+    }
   }
 }
 

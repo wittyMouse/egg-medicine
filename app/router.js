@@ -21,6 +21,7 @@ module.exports = app => {
   // 医院
   router.resources('hospital', '/hospital', controller.hospital);
   router.get('/hosp_list', controller.hospital.hosp_list);
+  router.post('/hosp_delete', controller.hospital.hosp_delete);
 
   // 用户
   router.resources('users', '/users', controller.users);
