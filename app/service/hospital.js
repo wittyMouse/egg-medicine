@@ -27,7 +27,8 @@ class HospitalService extends Service {
   }
 
   async show(id) {
-    const result = await this.app.mysql.get('hospital', { hospital_id: id });
+    let result = await this.app.mysql.get('hospital', { hospital_id: id });
+    result = utils.objectUSTC(result);
     return { data: result, status: 0 };
   }
 
@@ -53,36 +54,39 @@ class HospitalService extends Service {
   async destroy(id) {
     const result = await this.app.mysql.delete('hospital', { hospital_id: id });
     if (result.affectedRows === 1) {
-      return { hospital_id: id, msg: '删除成功', status: 0 };
+      return { msg: '删除成功', status: 0 };
     }
   }
 
   async hosp_list(params) {
-    const { tag, keyword, address, p, page_size } = params;
+    const { keyword, address, p, page_size } = params;
     let sql = 'SELECT * FROM hospital';
     let array = [];
-    if (tag) {
-      sql += ' WHERE hospital_name like ?';
-      array.push('%' + keyword + '%');
-    } else {
-      if (address) {
-        sql += ' WHERE address like ?';
-        array.push('%' + address + '%');
-      }
-      if (p && page_size) {
-        sql += ' LIMIT ?,?';
-        array = array.concat([(p - 1) * page_size, p * page_size]);
-      }
-    }
-    const result = await this.app.mysql.query(sql, array);
-    return { data: result, status: 0 };
-  }
 
-  async destroy(id) {
-    const result = await this.app.mysql.delete('hospital', { hospital_id: id });
-    if (result.affectedRows === 1) {
-      return { hospital_id: id, msg: '删除成功', status: 0 };
+    if (address) {
+      sql += ' WHERE address like ?';
+      array.push('%' + address + '%');
     }
+    if (keyword) {
+      if (sql.search(/WHERE/) > -1) {
+        sql += ' AND';
+      } else {
+        sql += ' WHERE';
+      }
+      sql += ' hospital_name like ?';
+      array.push('%' + keyword + '%');
+    }
+    if (p && page_size) {
+      sql += ' LIMIT ?,?';
+      array = array.concat([(p - 1) * page_size, p * page_size]);
+    }
+
+    const result = await this.app.mysql.query(sql, array);
+    let temp = [];
+    result.map(value => {
+      temp.push(utils.objectUSTC(value));
+    });
+    return { data: temp, status: 0 };
   }
 
   async hosp_delete(params) {

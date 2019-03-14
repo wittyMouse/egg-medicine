@@ -20,9 +20,11 @@ function underScoreToCamel(str) {
  */
 function objectCTUS(obj) {
     let temp = {};
-    Object.keys(obj).forEach(item => {
-        temp[camelToUnderScore(item)] = obj[item];
-    });
+    if (typeof obj == 'object') {
+        Object.keys(obj).forEach(item => {
+            temp[camelToUnderScore(item)] = obj[item];
+        });
+    }
     return temp;
 }
 
@@ -32,9 +34,11 @@ function objectCTUS(obj) {
  */
 function objectUSTC(obj) {
     let temp = {};
-    Object.keys(obj).forEach(item => {
-        temp[underScoreToCamel(item)] = obj[item];
-    });
+    if (typeof obj == 'object') {
+        Object.keys(obj).forEach(item => {
+            temp[underScoreToCamel(item)] = obj[item];
+        });
+    }
     return temp;
 }
 
