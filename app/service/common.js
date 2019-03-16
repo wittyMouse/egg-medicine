@@ -5,6 +5,7 @@ const crypto = require("crypto");
 const fs = require("fs");
 const path = require('path');
 const pump = require('mz-modules/pump');
+const url = require("url");
 
 class CommonService extends Service {
   async geocoder(params) {
@@ -76,11 +77,29 @@ class CommonService extends Service {
   }
 
   async upload(stream) {
+    const ctx = this.ctx;
     const suffix = stream.filename.match(/\.[^\.]+$/g)[0];
-    const target = path.join(this.config.baseDir, 'app/public/upload', Date.now() + suffix);
+    const filename = Date.now() + suffix;
+    const target = path.join(this.config.baseDir, 'app/public/upload', filename);
+    const webTarget = url.format({
+      protocol: ctx.protocol,
+      host: ctx.host,
+      pathname: 'public/upload/' + filename
+    });
     const writeStream = fs.createWriteStream(target);
     await pump(stream, writeStream);
-    return { data: { url: target }, msg: '上传成功', status: 1 };
+    return { data: { url: webTarget }, msg: '上传成功', status: 0 };
+  }
+
+  async deleteFile(param) {
+    const obj = url.parse(param);
+    const target = path.join(this.config.baseDir, 'app', obj.pathname);
+    try {
+      fs.unlinkSync(target);
+      return { msg: '删除成功', status: 0 };
+    } catch(err) {
+      return { msg: '删除失败', status: 1 };
+    }
   }
 }
 

@@ -55,11 +55,13 @@ class HospitalService extends Service {
     const result = await this.app.mysql.delete('hospital', { hospital_id: id });
     if (result.affectedRows === 1) {
       return { msg: '删除成功', status: 0 };
+    } else {
+      return { msg: '删除失败', status: 1 }
     }
   }
 
-  async hosp_list(params) {
-    const { keyword, address, p, page_size } = params;
+  async hospList(params) {
+    const { address, keyword, p, page_size } = params;
     let sql = 'SELECT * FROM hospital';
     let array = [];
 
@@ -89,8 +91,12 @@ class HospitalService extends Service {
     return { data: temp, status: 0 };
   }
 
-  async hosp_delete(params) {
+  async hospDelete(params) {
     const { ids } = params;
+    const res = await this.app.mysql.select('hospital', { where: { hospital_id: ids.split(',') }, columns: 'hospital_logo' });
+    for (let item of res) {
+      await this.ctx.service.common.deleteFile(item.hospital_logo);
+    }
     const result = await this.app.mysql.delete('hospital', { hospital_id: ids.split(',') });
     if (result.affectedRows === 1) {
       return { msg: '删除成功', status: 0 };

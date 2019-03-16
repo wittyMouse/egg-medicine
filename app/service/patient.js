@@ -3,10 +3,10 @@
 const Service = require('egg').Service;
 const utils = require("../lib/utils");
 
-class DepartmentService extends Service {
+class PatientService extends Service {
   async create(params) {
     let data = utils.objectCTUS(params);
-    const result = await this.app.mysql.insert('department', { ...data });
+    const result = await this.app.mysql.insert('patient', { ...data });
     if (result.affectedRows === 1) {
       return { msg: '添加成功', status: 0 };
     } else {
@@ -15,14 +15,14 @@ class DepartmentService extends Service {
   }
 
   async show(id) {
-    let result = await this.app.mysql.get('department', { department_id: id });
+    let result = await this.app.mysql.get('patient', { patient_id: id });
     result = utils.objectUSTC(result);
     return { data: result, status: 0 };
   }
 
   async update(id, params) {
     let data = utils.objectCTUS(params);
-    const result = await this.app.mysql.update('department', data, { where: { department_id: id } });
+    const result = await this.app.mysql.update('patient', data, { where: { patient_id: id } });
     if (result.affectedRows === 1) {
       return { msg: '更新成功', status: 0 };
     } else {
@@ -31,7 +31,7 @@ class DepartmentService extends Service {
   }
 
   async destroy(id) {
-    const result = await this.app.mysql.delete('department', { department_id: id });
+    const result = await this.app.mysql.delete('patient', { patient_id: id });
     if (result.affectedRows === 1) {
       return { msg: '删除成功', status: 0 };
     } else {
@@ -39,13 +39,13 @@ class DepartmentService extends Service {
     }
   }
 
-  async deptList(params) {
+  async patientList(params) {
     const { keyword, p, page_size } = params;
-    let sql = 'SELECT * FROM department';
+    let sql = 'SELECT * FROM patient';
     let array = [];
 
     if (keyword) {
-      sql += ' WHERE department_name like ?';
+      sql += ' WHERE patient_name like ?';
       array.push('%' + keyword + '%');
     }
     if (p && page_size) {
@@ -61,9 +61,9 @@ class DepartmentService extends Service {
     return { data: temp, status: 0 };
   }
 
-  async deptDelete(params) {
+  async patientDelete(params) {
     const { ids } = params;
-    const result = await this.app.mysql.delete('department', { department_id: ids.split(',') });
+    const result = await this.app.mysql.delete('patient', { patient_id: ids.split(',') });
     if (result.affectedRows === 1) {
       return { msg: '删除成功', status: 0 };
     } else {
@@ -72,4 +72,4 @@ class DepartmentService extends Service {
   }
 }
 
-module.exports = DepartmentService;
+module.exports = PatientService;

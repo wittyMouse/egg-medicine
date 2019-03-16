@@ -41,7 +41,7 @@ class UsersService extends Service {
     }
   }
 
-  async set_userinfo(params) {
+  async setUserinfo(params) {
     let row = await this.app.mysql.get('wx_token', { token: params.token });
     if (row != undefined) {
       let res = await this.show(row.open_id);
@@ -71,7 +71,7 @@ class UsersService extends Service {
     }
   }
 
-  async get_userinfo(token) {
+  async getUserinfo(token) {
     let row = await this.app.mysql.get('wx_token', { token });
     if (row != undefined) {
       let result = await this.show(row.open_id);

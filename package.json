@@ -7,8 +7,12 @@
     "node": ">=8.9.0"
   },
   "scripts": {
+    "start": "egg-scripts start --port=80 --daemon --title=egg-server-medicine",
+    "stop": "egg-scripts stop --title=egg-server-medicine",
     "dev": "egg-bin dev",
-    "test": "egg-bin test",
+    "debug": "egg-bin debug",
+    "test": "npm run test-local",
+    "test-local": "egg-bin test",
     "cov": "egg-bin cov"
   },
   "repository": {
@@ -21,7 +25,7 @@
   "dependencies": {
     "egg": "^2.19.0",
     "egg-mysql": "^3.0.0",
-    "egg-validate": "^2.0.2"
+    "egg-scripts": "^2.11.0"
   },
   "devDependencies": {
     "egg-bin": "^4.11.0",

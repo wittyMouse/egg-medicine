@@ -31,16 +31,16 @@ class HospitalController extends Controller {
     ctx.status = 200;
   }
 
-  async hosp_list() {
+  async hospList() {
     const ctx = this.ctx;
-    const result = await ctx.service.hospital.hosp_list(ctx.request.query);
+    const result = await ctx.service.hospital.hospList(ctx.request.query);
     ctx.body = result;
     ctx.status = 200;
   }
 
-  async hosp_delete() {
+  async hospDelete() {
     const ctx = this.ctx;
-    const result = await ctx.service.hospital.hosp_delete(ctx.request.body);
+    const result = await ctx.service.hospital.hospDelete(ctx.request.body);
     ctx.body = result;
     ctx.status = 200;
   }
