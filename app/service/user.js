@@ -4,38 +4,69 @@ const Service = require('egg').Service;
 const WXBizDataCrypt = require('../lib/WXBizDataCrypt');
 const utils = require('../lib/utils');
 
-class UsersService extends Service {
+class UserService extends Service {
   async create(params) {
-    const result = await this.app.mysql.insert('users', { ...params });
+    let data = utils.objectCTUS(params);
+    const result = await this.app.mysql.insert('user', { ...data });
     if (result.affectedRows === 1) {
-      return { data: { open_id: params.openId }, msg: '添加成功', status: 0 };
+      return { msg: '添加成功', status: 0 };
     } else {
-      return { msg: '添加失败', status: 1 };
+      return { msg: '添加失败', status: 1 }
     }
   }
 
   async show(id) {
-    const row = await this.app.mysql.get('users', { open_id: id });
-    if (row != undefined) {
-      return { data: row, status: 0 };
+    let result = await this.app.mysql.get('user', { open_id: id });
+    result = utils.objectUSTC(result);
+    return { data: result, status: 0 };
+  }
+
+  async update(id, params) {
+    let data = utils.objectCTUS(params);
+    const result = await this.app.mysql.update('user', data, { where: { open_id: id } });
+    if (result.affectedRows === 1) {
+      return { msg: '更新成功', status: 0 };
     } else {
-      return { msg: '该用户不存在', status: 1 };
+      return { msg: '更新失败', status: 1 }
     }
   }
 
-  async update(params) {
-    const result = await this.app.mysql.update('users', { ...params }, { where: { open_id: params.open_id } });
+  async destroy(id) {
+    const result = await this.app.mysql.delete('user', { open_id: id });
     if (result.affectedRows === 1) {
-      return { data: { open_id: params.open_id }, msg: '更新成功', status: 0 };
+      return { msg: '删除成功', status: 0 };
     } else {
-      return { msg: '更新失败', status: 1 };
+      return { msg: '删除失败', status: 1 }
     }
   }
-  
-  async destroy(id) {
-    const result = await this.app.mysql.delete('users', { open_id: id });
+
+  async userList(params) {
+    const { keyword, p, page_size } = params;
+    let sql = 'SELECT * FROM user';
+    let array = [];
+
+    if (keyword) {
+      sql += ' WHERE user_name like ?';
+      array.push('%' + keyword + '%');
+    }
+    if (p && page_size) {
+      sql += ' LIMIT ?,?';
+      array = array.concat([(p - 1) * page_size, p * page_size]);
+    }
+
+    const result = await this.app.mysql.query(sql, array);
+    let temp = [];
+    result.map(value => {
+      temp.push(utils.objectUSTC(value));
+    });
+    return { data: temp, status: 0 };
+  }
+
+  async userDelete(params) {
+    const { ids } = params;
+    const result = await this.app.mysql.delete('user', { open_id: ids.split(',') });
     if (result.affectedRows === 1) {
-      return { data: { open_id: id }, msg: '删除成功', status: 0 };
+      return { msg: '删除成功', status: 0 };
     } else {
       return { msg: '删除失败', status: 1 };
     }
@@ -85,4 +116,4 @@ class UsersService extends Service {
   }
 }
 
-module.exports = UsersService;
+module.exports = UserService;
