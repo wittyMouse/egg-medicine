@@ -42,9 +42,29 @@ function objectUSTC(obj) {
     return temp;
 }
 
+/**
+ * 去前缀
+ * @param {*} obj 
+ */
+function removePrefix(obj) {
+    let temp = {};
+    if (typeof obj == 'object') {
+        Object.keys(obj).forEach(item => {
+            let arr = item.match(/([^_]+)_(.+)/);
+            if (temp[arr[1]]) {
+                temp[arr[1]][arr[2]] = obj[item];
+            } else {
+                temp[arr[1]] = { [arr[2]]: obj[item] };
+            }
+        });
+    }
+    return temp;
+}
+
 module.exports = {
     camelToUnderScore,
     underScoreToCamel,
     objectCTUS,
-    objectUSTC
+    objectUSTC,
+    removePrefix
 }

@@ -45,11 +45,11 @@ class DepartmentService extends Service {
 
   async deptList(params) {
     const { keyword, p, page_size } = params;
-    let sql = 'SELECT * FROM department';
+    let sql = 'SELECT department_id, hospital_id, parent_id, department_name, introduction, create_time FROM department';
     let array = [];
 
     if (keyword) {
-      sql += ' WHERE department_name like ?';
+      sql += ' WHERE department_name LIKE ?';
       array.push('%' + keyword + '%');
     }
     if (p && page_size) {

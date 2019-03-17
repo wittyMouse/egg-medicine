@@ -46,11 +46,11 @@ class UserService extends Service {
 
   async userList(params) {
     const { keyword, p, page_size } = params;
-    let sql = 'SELECT * FROM user';
+    let sql = 'SELECT open_id, union_id, nick_name, gender, language, city, province, country, avatar_url, phone_number, pure_phone_number, country_code, balance, is_admin, create_time FROM user';
     let array = [];
 
     if (keyword) {
-      sql += ' WHERE user_name like ?';
+      sql += ' WHERE nick_name LIKE ?';
       array.push('%' + keyword + '%');
     }
     if (p && page_size) {

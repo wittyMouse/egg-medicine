@@ -45,11 +45,11 @@ class DoctorService extends Service {
 
   async doctorList(params) {
     const { keyword, p, page_size } = params;
-    let sql = 'SELECT * FROM doctor';
+    let sql = 'SELECT doctor_id, hospital_id, department_id, doctor_name, doctor_avatar, introduction, create_time FROM doctor';
     let array = [];
 
     if (keyword) {
-      sql += ' WHERE doctor_name like ?';
+      sql += ' WHERE doctor_name LIKE ?';
       array.push('%' + keyword + '%');
     }
     if (p && page_size) {

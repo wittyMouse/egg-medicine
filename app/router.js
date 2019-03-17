@@ -35,12 +35,20 @@ module.exports = app => {
 
   // 用户
   router.resources('user', '/user', controller.user);
+  router.get('/user_list', controller.user.userList);
+  router.post('/user_delete', controller.user.userDelete);
   router.post('/user/set_userinfo', controller.user.setUserinfo);
   router.post('/user/get_userinfo', controller.user.getUserinfo);
-  
+
 
   // 就诊人
   router.resources('patient', '/patient', controller.patient);
   router.get('/patient_list', controller.patient.patientList);
   router.post('/patient_delete', controller.patient.patientDelete);
+
+  // 挂号信息
+  router.resources('register', '/register', controller.register);
+  router.get('/register_list', controller.register.registerList);
+  router.get('/register_detail/:id', controller.register.registerDetail);
+  router.post('/register_delete', controller.register.registerDelete);
 };

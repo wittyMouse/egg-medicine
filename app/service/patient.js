@@ -45,11 +45,11 @@ class PatientService extends Service {
 
   async patientList(params) {
     const { keyword, p, page_size } = params;
-    let sql = 'SELECT * FROM patient';
+    let sql = 'SELECT patient_id, open_id, patient_name, gender, id_card, phone_number, address, is_default, create_time FROM patient';
     let array = [];
 
     if (keyword) {
-      sql += ' WHERE patient_name like ?';
+      sql += ' WHERE patient_name LIKE ?';
       array.push('%' + keyword + '%');
     }
     if (p && page_size) {
