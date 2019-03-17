@@ -9,8 +9,8 @@ module.exports = app => {
   // 地址解析
   router.get('/common/geocoder', controller.common.geocoder);
 
-  // 地址解析
-  router.get('/common/login', controller.common.login);
+  // 登录
+  router.post('/common/login', controller.common.login);
 
   // 上传文件
   router.post('/common/upload', controller.common.upload);

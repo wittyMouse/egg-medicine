@@ -12,7 +12,7 @@ class CommonController extends Controller {
   
   async login() {
     const { ctx } = this;
-    const result = await ctx.service.common.login(ctx.request.query.code);
+    const result = await ctx.service.common.login(ctx.request.body.code);
     ctx.body = result;
     ctx.status = 200;
   }

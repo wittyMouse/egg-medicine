@@ -17,8 +17,12 @@ class UserService extends Service {
 
   async show(id) {
     let result = await this.app.mysql.get('user', { open_id: id });
-    result = utils.objectUSTC(result);
-    return { data: result, status: 0 };
+    if (undefined != result) {
+      result = utils.objectUSTC(result);
+      return { data: result, status: 0 };
+    } else {
+      return { msg: '暂无数据', status: 1 };
+    }
   }
 
   async update(id, params) {
@@ -74,7 +78,7 @@ class UserService extends Service {
 
   async setUserinfo(params) {
     let row = await this.app.mysql.get('wx_token', { token: params.token });
-    if (row != undefined) {
+    if (undefined != row) {
       let res = await this.show(row.open_id);
       if (res.status == 1) {
         let data = new WXBizDataCrypt(this.config.appId, row.session_key).decryptData(params.encryptedData, params.iv);
@@ -103,15 +107,12 @@ class UserService extends Service {
   }
 
   async getUserinfo(token) {
-    let row = await this.app.mysql.get('wx_token', { token });
-    if (row != undefined) {
-      let result = await this.show(row.open_id);
-      if (result.status == 0) {
-        result.data = utils.objectUSTC(result.data);
-      }
+    let res = await this.app.mysql.get('wx_token', { token });
+    if (undefined != res) {
+      let result = await this.show(res.open_id);
       return result;
     } else {
-      return { msg: 'token有误，或没有信息', status: 1 };
+      return { msg: 'token有误，或暂无信息', status: 1 };
     }
   }
 }

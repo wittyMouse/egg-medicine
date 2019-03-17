@@ -28,8 +28,12 @@ class HospitalService extends Service {
 
   async show(id) {
     let result = await this.app.mysql.get('hospital', { hospital_id: id });
-    result = utils.objectUSTC(result);
-    return { data: result, status: 0 };
+    if (undefined != result) {
+      result = utils.objectUSTC(result);
+      return { data: result, status: 0 };
+    } else {
+      return { msg: '暂无数据', status: 1 };
+    }
   }
 
   async update(id, params) {
