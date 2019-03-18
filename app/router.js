@@ -40,7 +40,6 @@ module.exports = app => {
   router.post('/user/set_userinfo', controller.user.setUserinfo);
   router.post('/user/get_userinfo', controller.user.getUserinfo);
 
-
   // 就诊人
   router.resources('patient', '/patient', controller.patient);
   router.get('/patient_list', controller.patient.patientList);
@@ -51,4 +50,14 @@ module.exports = app => {
   router.get('/register_list', controller.register.registerList);
   router.get('/register_detail/:id', controller.register.registerDetail);
   router.post('/register_delete', controller.register.registerDelete);
+
+  // 排班
+  router.resources('roster', '/roster', controller.roster);
+  router.get('/roster_list', controller.roster.rosterList);
+  router.post('/roster_delete', controller.roster.rosterDelete);
+
+  // 排班医生
+  router.resources('roster_doctor', '/roster_doctor', controller.roster_doctor);
+  router.get('/roster_doctor_list', controller.roster_doctor.rosterDoctorList);
+  router.post('/roster_doctor_delete', controller.roster_doctor.rosterDoctorDelete);
 };
