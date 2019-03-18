@@ -58,6 +58,13 @@ class UserController extends Controller {
     ctx.body = result;
     ctx.status = 200;
   }
+
+  async checkBalance() {
+    const ctx = this.ctx;
+    const result = await ctx.service.user.checkBalance(ctx.request.body.token);
+    ctx.body = result;
+    ctx.status = 200;
+  }
 }
 
 module.exports = UserController;

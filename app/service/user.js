@@ -46,7 +46,7 @@ class UserService extends Service {
 
   async userList(params) {
     const { keyword, p, page_size } = params;
-    let sql = 'SELECT open_id, union_id, nick_name, gender, language, city, province, country, avatar_url, phone_number, pure_phone_number, country_code, balance, is_admin, create_time FROM user';
+    let sql = 'SELECT open_id, nick_name, gender, language, city, province, country, avatar_url, phone_number, pure_phone_number, country_code, balance, is_admin, create_time FROM user';
     let array = [];
 
     if (keyword) {
@@ -85,7 +85,6 @@ class UserService extends Service {
         if (data.watermark.appid == this.config.appId) {
           data = {
             open_id: row.open_id,
-            union_id: data.unionId,
             nick_name: data.nickName,
             gender: data.gender,
             language: data.language,
@@ -113,6 +112,17 @@ class UserService extends Service {
       return result;
     } else {
       return { msg: 'token有误，或暂无信息', status: 1 };
+    }
+  }
+
+  async checkBalance(token) {
+    let sql = "SELECT a.balance FROM user AS a JOIN wx_token AS b ON a.open_id = b.open_id WHERE token = ?"
+    let result = await this.app.mysql.query(sql, token);
+    if (result.length > 0) {
+      result = utils.objectUSTC(result[0]);
+      return { data: result, status: 0 };
+    } else {
+      return { msg: '暂无数据', status: 1 };
     }
   }
 }

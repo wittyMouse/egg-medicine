@@ -18,6 +18,21 @@ module.exports = app => {
   // 删除文件
   router.post('/common/delete_file', controller.common.deleteFile);
 
+  // 用户
+  router.resources('user', '/user', controller.user);
+  router.get('/user_list', controller.user.userList);
+  router.post('/user_delete', controller.user.userDelete);
+  router.post('/set_userinfo', controller.user.setUserinfo);
+  router.post('/get_userinfo', controller.user.getUserinfo);
+
+  // 查询余额
+  router.post('/check_balance', controller.user.checkBalance);
+
+  // 消费记录
+  router.resources('pay_log', '/pay_log', controller.payLog);
+  router.get('/pay_log_list', controller.payLog.payLogList);
+  router.post('/pay_log_delete', controller.payLog.payLogDelete);
+
   // 医院
   router.resources('hospital', '/hospital', controller.hospital);
   router.get('/hosp_list', controller.hospital.hospList);
@@ -32,13 +47,6 @@ module.exports = app => {
   router.resources('doctor', '/doctor', controller.doctor);
   router.get('/doctor_list', controller.doctor.doctorList);
   router.post('/doctor_delete', controller.doctor.doctorDelete);
-
-  // 用户
-  router.resources('user', '/user', controller.user);
-  router.get('/user_list', controller.user.userList);
-  router.post('/user_delete', controller.user.userDelete);
-  router.post('/user/set_userinfo', controller.user.setUserinfo);
-  router.post('/user/get_userinfo', controller.user.getUserinfo);
 
   // 就诊人
   router.resources('patient', '/patient', controller.patient);
@@ -57,7 +65,7 @@ module.exports = app => {
   router.post('/roster_delete', controller.roster.rosterDelete);
 
   // 排班医生
-  router.resources('roster_doctor', '/roster_doctor', controller.roster_doctor);
-  router.get('/roster_doctor_list', controller.roster_doctor.rosterDoctorList);
-  router.post('/roster_doctor_delete', controller.roster_doctor.rosterDoctorDelete);
+  router.resources('roster_doctor', '/roster_doctor', controller.rosterDoctor);
+  router.get('/roster_doctor_list', controller.rosterDoctor.rosterDoctorList);
+  router.post('/roster_doctor_delete', controller.rosterDoctor.rosterDoctorDelete);
 };

@@ -57,9 +57,9 @@ class CommonService extends Service {
         const isExists = await this.app.mysql.get("wx_token", { open_id: data.openid });
         let res = "";
         if (undefined != isExists) {
-          res = await this.app.mysql.update("wx_token", { union_id: data.unionid || "", token, session_key: data.session_key, last_visit_time: this.app.mysql.literals.now }, { where: { open_id: data.openid } });
+          res = await this.app.mysql.update("wx_token", { token, session_key: data.session_key, last_visit_time: this.app.mysql.literals.now }, { where: { open_id: data.openid } });
         } else {
-          res = await this.app.mysql.insert("wx_token", { open_id: data.openid, union_id: data.unionid || "", token, session_key: data.session_key });
+          res = await this.app.mysql.insert("wx_token", { open_id: data.openid, token, session_key: data.session_key });
         }
         if (res.affectedRows === 1) {
           return { data: { token }, msg: "success", status: 0 };
