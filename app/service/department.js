@@ -44,10 +44,15 @@ class DepartmentService extends Service {
   }
 
   async deptList(params) {
-    const { keyword, p, page_size } = params;
+    const data = utils.objectCTUS(params);
+    const { hospital_id, keyword, p, page_size } = data;
     let sql = 'SELECT department_id, hospital_id, parent_id, department_name, introduction, create_time FROM department';
     let array = [];
-
+    
+    if (hospital_id) {
+      sql += ' WHERE hospital_id = ? ORDER BY parent_id';
+      array.push(hospital_id);
+    }
     if (keyword) {
       sql += ' WHERE department_name LIKE ?';
       array.push('%' + keyword + '%');
@@ -62,6 +67,10 @@ class DepartmentService extends Service {
     result.map(value => {
       temp.push(utils.objectUSTC(value));
     });
+
+    if (hospital_id) {
+      temp = this.deptFormat(temp);
+    }
     return { data: temp, status: 0 };
   }
 
@@ -73,6 +82,23 @@ class DepartmentService extends Service {
     } else {
       return { msg: '删除失败', status: 1 };
     }
+  }
+
+  deptFormat(arr) {
+    let temp = [];
+    arr.forEach((item, index) => {
+      if (item.parentId == 0) {
+        temp.push(item);
+        temp[index].childList = [];
+      } else {
+        temp.forEach(value => {
+          if (item.parentId == value.departmentId) {
+            value.childList.push(item);
+          }
+        })
+      }
+    })
+    return temp;
   }
 }
 
