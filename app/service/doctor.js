@@ -44,9 +44,15 @@ class DoctorService extends Service {
   }
 
   async doctorList(params) {
-    const { keyword, p, page_size } = params;
+    const data = utils.objectCTUS(params);
+    const { department_id, keyword, p, page_size } = data;
     let sql = 'SELECT doctor_id, hospital_id, department_id, doctor_name, doctor_avatar, introduction, create_time FROM doctor';
     let array = [];
+
+    if (department_id) {
+      sql += ' WHERE department_id = ?';
+      array.push(department_id);
+    }
 
     if (keyword) {
       sql += ' WHERE doctor_name LIKE ?';

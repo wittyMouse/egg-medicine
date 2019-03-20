@@ -5,42 +5,42 @@ const Controller = require("egg").Controller;
 class RosterDoctorController extends Controller {
   async create() {
     const ctx = this.ctx;
-    const result = await ctx.service.roster_doctor.create(ctx.request.body);
+    const result = await ctx.service.rosterDoctor.create(ctx.request.body);
     ctx.body = result;
     ctx.status = 200;
   }
 
   async show() {
     const ctx = this.ctx;
-    const result = await ctx.service.roster_doctor.show(ctx.params.id);
+    const result = await ctx.service.rosterDoctor.show(ctx.params.id);
     ctx.body = result;
     ctx.status = 200;
   }
 
   async update() {
     const ctx = this.ctx;
-    const result = await ctx.service.roster_doctor.update(ctx.params.id, ctx.request.body);
+    const result = await ctx.service.rosterDoctor.update(ctx.params.id, ctx.request.body);
     ctx.body = result;
     ctx.status = 200;
   }
 
   async destroy() {
     const ctx = this.ctx;
-    const result = await ctx.service.roster_doctor.destroy(ctx.params.id);
+    const result = await ctx.service.rosterDoctor.destroy(ctx.params.id);
     ctx.body = result;
     ctx.status = 200;
   }
 
   async rosterDoctorList() {
     const ctx = this.ctx;
-    const result = await ctx.service.roster_doctor.rosterDoctorList(ctx.request.query);
+    const result = await ctx.service.rosterDoctor.rosterDoctorList(ctx.request.query);
     ctx.body = result;
     ctx.status = 200;
   }
 
   async rosterDoctorDelete() {
     const ctx = this.ctx;
-    const result = await ctx.service.roster_doctor.rosterDoctorDelete(ctx.request.body);
+    const result = await ctx.service.rosterDoctor.rosterDoctorDelete(ctx.request.body);
     ctx.body = result;
     ctx.status = 200;
   }
