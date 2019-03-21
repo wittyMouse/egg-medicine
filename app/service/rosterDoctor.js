@@ -56,9 +56,9 @@ class RosterDoctorService extends Service {
   }
 
   async rosterDoctorList(params) {
-    let data = utils.objectCTUS(params);    
+    let data = utils.objectCTUS(params);
     const { begin_time, end_time, doctor_id, roster_id, p, page_size } = data;
-    let sql = "SELECT a.roster_doctor_id, a.roster_id, a.doctor_id, a.begin_time, a.end_time, a.duration, a.create_time, b.hospital_id, b.department_id, b.doctor_name, b.doctor_avatar, b.introduction FROM roster_doctor AS a JOIN doctor AS b ON a.doctor_id = b.doctor_id";
+    let sql = "SELECT a.roster_doctor_id, a.roster_id, a.doctor_id, a.begin_time, a.end_time, a.duration, a.create_time, b.hospital_id, b.department_id, b.doctor_name, b.doctor_avatar, b.introduction, b.fee FROM roster_doctor AS a JOIN doctor AS b ON a.doctor_id = b.doctor_id";
     let array = [];
 
     if (roster_id) {
@@ -73,7 +73,7 @@ class RosterDoctorService extends Service {
       } else {
         temp = ' WHERE';
       }
-      sql += temp + " doctor_id = ?";
+      sql += temp + " a.doctor_id = ?";
       array.push(doctor_id);
     }
 
@@ -84,7 +84,7 @@ class RosterDoctorService extends Service {
       } else {
         temp = ' WHERE';
       }
-      sql += temp + " begin_time > ? OR end_time > ? ";
+      sql += temp + " a.begin_time > ? OR a.end_time > ? ";
       array.push(end_time);
       array.push(begin_time);
     }
