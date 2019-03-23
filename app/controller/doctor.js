@@ -38,6 +38,13 @@ class DoctorController extends Controller {
     ctx.status = 200;
   }
 
+  async doctorDetail() {
+    const ctx = this.ctx;
+    const result = await ctx.service.doctor.doctorDetail(ctx.request.query);
+    ctx.body = result;
+    ctx.status = 200;
+  }
+
   async doctorDelete() {
     const ctx = this.ctx;
     const result = await ctx.service.doctor.doctorDelete(ctx.request.body);

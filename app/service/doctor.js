@@ -71,6 +71,18 @@ class DoctorService extends Service {
     return { data: temp, status: 0 };
   }
 
+  async doctorDetail(params) {
+    const { id } = params;
+    let sql = "SELECT a.doctor_id, a.doctor_name, a.fee, b.department_id, b.department_name, b.parent_id, c.department_name AS parent_department_name, d.hospital_id, d.hospital_name, d.address, d.longitude, d.latitude, d.contacts FROM ((doctor AS a JOIN department AS b ON a.department_id = b.department_id) JOIN department AS c ON b.parent_id = c.department_id) JOIN hospital AS d ON c.hospital_id = d.hospital_id WHERE a.doctor_id = ?";
+    let result = await this.app.mysql.query(sql, id);
+    if (result.length > 0) {
+      result = utils.objectUSTC(result[0]);
+      return { data: result, status: 0 };
+    } else {
+      return { msg: '暂无数据', status: 1 };
+    }
+  }
+
   async doctorDelete(params) {
     const { ids } = params;
     const result = await this.app.mysql.delete('doctor', { doctor_id: ids.split(',') });

@@ -46,6 +46,7 @@ module.exports = app => {
   // 医生
   router.resources('doctor', '/doctor', controller.doctor);
   router.get('/doctor_list', controller.doctor.doctorList);
+  router.get('/doctor_detail', controller.doctor.doctorDetail);
   router.post('/doctor_delete', controller.doctor.doctorDelete);
 
   // 就诊人
