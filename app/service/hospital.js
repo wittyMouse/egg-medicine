@@ -66,11 +66,11 @@ class HospitalService extends Service {
 
   async hospList(params) {
     const { address, keyword, p, page_size } = params;
-    let sql = 'SELECT hospital_id, hospital_name, hospital_logo, address, longitude, latitude, contacts, introduction, create_time FROM hospital';
+    let sql = 'SELECT hospital_id, hospital_name, hospital_logo, level, region, address, longitude, latitude, contacts, introduction, create_time FROM hospital';
     let array = [];
 
     if (address) {
-      sql += ' WHERE address LIKE ?';
+      sql += ' WHERE region LIKE ?';
       array.push('%' + address + '%');
     }
     if (keyword) {

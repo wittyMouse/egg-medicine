@@ -55,7 +55,12 @@ class DoctorService extends Service {
     }
 
     if (keyword) {
-      sql += ' WHERE doctor_name LIKE ?';
+      if (sql.search(/WHERE/) > -1) {
+        sql += ' AND';
+      } else {
+        sql += ' WHERE';
+      }
+      sql += ' doctor_name LIKE ?';
       array.push('%' + keyword + '%');
     }
     if (p && page_size) {

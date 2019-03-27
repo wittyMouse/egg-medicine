@@ -54,7 +54,12 @@ class DepartmentService extends Service {
       array.push(hospital_id);
     }
     if (keyword) {
-      sql += ' WHERE department_name LIKE ?';
+      if (sql.search(/WHERE/) > -1) {
+        sql += ' AND';
+      } else {
+        sql += ' WHERE';
+      }
+      sql += ' department_name LIKE ?';
       array.push('%' + keyword + '%');
     }
     if (p && page_size) {

@@ -24,6 +24,7 @@ module.exports = app => {
   router.post('/user_delete', controller.user.userDelete);
   router.post('/set_userinfo', controller.user.setUserinfo);
   router.post('/get_userinfo', controller.user.getUserinfo);
+  router.post('/update_userinfo', controller.user.updateUserinfo);
 
   // 查询余额
   router.post('/check_balance', controller.user.checkBalance);

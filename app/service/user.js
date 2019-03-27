@@ -115,6 +115,21 @@ class UserService extends Service {
     }
   }
 
+  async updateUserinfo(params) {
+    let data = utils.objectCTUS(params);
+    let sql = `UPDATE user SET ${data.key} = ? WHERE open_id = (SELECT open_id FROM wx_token WHERE token = ?)`;
+    let array = [data.value, data.token];
+    if (data.key == 'balance') {
+      sql = `UPDATE user SET balance = balance ${data.tag == 'add' ? '+' : '-'} ? WHERE open_id = (SELECT open_id FROM wx_token WHERE token = ?)`;
+    }
+    const result = await this.app.mysql.query(sql, array);
+    if (result.affectedRows === 1) {
+      return { msg: '更新成功', status: 0 };
+    } else {
+      return { msg: '更新失败', status: 1 }
+    }
+  }
+
   async checkBalance(token) {
     let sql = "SELECT a.balance FROM user AS a JOIN wx_token AS b ON a.open_id = b.open_id WHERE token = ?"
     let result = await this.app.mysql.query(sql, token);
