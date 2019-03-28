@@ -58,6 +58,7 @@ module.exports = app => {
   // 挂号信息
   router.resources('register', '/register', controller.register);
   router.get('/register_list', controller.register.registerList);
+  router.post('/register_record', controller.register.registerRecord);
   router.get('/register_detail/:id', controller.register.registerDetail);
   router.post('/register_delete', controller.register.registerDelete);
 

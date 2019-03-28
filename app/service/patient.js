@@ -6,7 +6,13 @@ const utils = require("../lib/utils");
 class PatientService extends Service {
   async create(params) {
     let data = utils.objectCTUS(params);
-    const result = await this.app.mysql.insert('patient', { ...data });
+    let sql = "INSERT INTO patient SET open_id = (SELECT open_id FROM wx_token WHERE token = ?), patient_name = ?, gender = ?, id_card = ?, phone_number = ?, address = ?";
+    let array = [data['token'], data['patient_name'], data['gender'], data['id_card'], data['phone_number'], data['address']];
+    if (data['is_default']) {
+      sql += ", is_default = ?";
+      array.push(data['is_default']);
+    }
+    const result = await this.app.mysql.query(sql, array);
     if (result.affectedRows === 1) {
       return { msg: '添加成功', status: 0 };
     } else {

@@ -38,6 +38,13 @@ class RegisterController extends Controller {
     ctx.status = 200;
   }
 
+  async registerRecord() {
+    const ctx = this.ctx;
+    const result = await ctx.service.register.registerRecord(ctx.request.body);
+    ctx.body = result;
+    ctx.status = 200;
+  }
+
   async registerDetail() {
     const ctx = this.ctx;
     const result = await ctx.service.register.registerDetail(ctx.params.id);
