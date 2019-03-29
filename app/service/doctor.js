@@ -46,7 +46,7 @@ class DoctorService extends Service {
   async doctorList(params) {
     const data = utils.objectCTUS(params);
     const { department_id, keyword, p, page_size } = data;
-    let sql = 'SELECT doctor_id, hospital_id, department_id, doctor_name, doctor_avatar, introduction, create_time FROM doctor';
+    let sql = 'SELECT doctor_id, department_id, doctor_name, doctor_avatar, technical_title, fee FROM doctor';
     let array = [];
 
     if (department_id) {
