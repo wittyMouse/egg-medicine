@@ -69,6 +69,7 @@ module.exports = app => {
 
   // 排班医生
   router.resources('roster_doctor', '/roster_doctor', controller.rosterDoctor);
+  router.get('/get_ticket', controller.rosterDoctor.getTicket);
   router.get('/roster_doctor_list', controller.rosterDoctor.rosterDoctorList);
   router.post('/roster_doctor_delete', controller.rosterDoctor.rosterDoctorDelete);
 };

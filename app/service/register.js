@@ -124,11 +124,11 @@ class RegisterService extends Service {
     if (!token) {
       return { msg: 'token不能为空', status: 1 };
     }
-    let sql = "SELECT g.hospital_name, f.department_name, e.doctor_name, c.patient_name, d.type, d.fee, d.visit_time FROM (((((wx_token AS a JOIN user AS b ON a.open_id = b.open_id) JOIN patient AS c ON b.open_id = c.open_id) JOIN registered_record AS d ON c.patient_id = d.patient_id) JOIN doctor AS e ON d.doctor_id = e.doctor_id) JOIN department AS f ON e.department_id = f.department_id) JOIN hospital AS g ON f.hospital_id = g.hospital_id WHERE a.token = ?";
+    let sql = "SELECT f.hospital_name, e.department_name, d.doctor_name, d.doctor_avatar, b.patient_name, c.record_id, c.type, c.fee, c.visit_time FROM ((((wx_token AS a JOIN patient AS b ON a.open_id = b.open_id) JOIN registered_record AS c ON b.patient_id = c.patient_id) JOIN doctor AS d ON c.doctor_id = d.doctor_id) JOIN department AS e ON d.department_id = e.department_id) JOIN hospital AS f ON e.hospital_id = f.hospital_id WHERE a.token = ?";
     let array = [token];
 
-    if (type) {
-      sql += " AND d.type = ?";
+    if (type != 0) {
+      sql += " AND c.type = ?";
       array.push(type);
     }
 

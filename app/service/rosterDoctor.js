@@ -55,45 +55,35 @@ class RosterDoctorService extends Service {
     }
   }
 
-  async rosterDoctorList(params) {
+  async getTicket(params) {
     let data = utils.objectCTUS(params);
-    const { begin_time, end_time, doctor_id, roster_id, p, page_size } = data;
-    let sql = "SELECT a.roster_doctor_id, a.roster_id, a.doctor_id, a.begin_time, a.end_time, a.duration, a.create_time, b.hospital_id, b.department_id, b.doctor_name, b.doctor_avatar, b.introduction, b.fee FROM roster_doctor AS a JOIN doctor AS b ON a.doctor_id = b.doctor_id";
+    const { doctor_id, date } = data;
+    let sql = "";
     let array = [];
 
-    if (roster_id) {
-      sql += " WHERE roster_id = ?";
-      array.push(roster_id);
-    }
-
     if (doctor_id) {
-      let temp = "";
-      if (sql.search(/WHERE/) > -1) {
-        temp = ' AND';
-      } else {
-        temp = ' WHERE';
-      }
-      sql += temp + " a.doctor_id = ?";
+      sql = "SELECT roster_doctor_id, roster_id, doctor_id, begin_time, end_time, date, duration, create_time FROM roster_doctor WHERE doctor_id = ? LIMIT 1";
       array.push(doctor_id);
     }
 
-    if (begin_time && end_time) {
-      let temp = "";
-      if (sql.search(/WHERE/) > -1) {
-        temp = ' AND';
-      } else {
-        temp = ' WHERE';
-      }
-      sql += temp + " a.begin_time > ? OR a.end_time > ? ";
-      array.push(end_time);
-      array.push(begin_time);
+    if (date) {
+      sql = "SELECT roster_doctor_id, roster_id, doctor_id, begin_time, end_time, date, duration, create_time FROM roster_doctor WHERE doctor_id = ? AND date = ?";
+      array.push(date);
     }
 
-    if (p && page_size) {
-      sql += ' LIMIT ?,?';
-      array = array.concat([(p - 1) * page_size, p * page_size]);
-    }
+    const result = await this.app.mysql.query(sql, array);
+    let temp = [];
+    result.map(value => {
+      temp.push(utils.objectUSTC(value));
+    });
+    return { data: temp, status: 0 };
+  }
 
+  async rosterDoctorList(params) {
+    let data = utils.objectCTUS(params);
+    const { department_id, date } = data;
+    let sql = "SELECT b.doctor_id, b.doctor_name, b.doctor_avatar, b.technical_title, b.fee FROM roster_doctor AS a JOIN doctor AS b ON a.doctor_id = b.doctor_id WHERE a.roster_id = (SELECT roster_id FROM roster WHERE department_id = ?) AND a.date = ?";
+    let array = [department_id, date];
     const result = await this.app.mysql.query(sql, array);
     let temp = [];
     result.map(value => {

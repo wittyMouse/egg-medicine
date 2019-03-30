@@ -50,14 +50,31 @@ class PatientService extends Service {
   }
 
   async patientList(params) {
-    const { keyword, p, page_size } = params;
-    let sql = 'SELECT patient_id, open_id, patient_name, gender, id_card, phone_number, address, is_default, create_time FROM patient';
-    let array = [];
+    let data = utils.objectCTUS(params);
+    const { token, is_default, keyword, p, page_size } = data;
+    let sql = 'SELECT b.patient_id, b.open_id, b.patient_name, b.gender, b.id_card, b.phone_number, b.address, b.is_default FROM wx_token AS a JOIN patient AS b ON a.open_id = b.open_id WHERE token = ?';
+    let array = [token];
+
+    if (is_default) {
+      if (sql.search(/WHERE/) > -1) {
+        sql += ' AND';
+      } else {
+        sql += ' WHERE';
+      }
+      sql += ' is_default = ?';
+      array.push(is_default);
+    }
 
     if (keyword) {
-      sql += ' WHERE patient_name LIKE ?';
+      if (sql.search(/WHERE/) > -1) {
+        sql += ' AND';
+      } else {
+        sql += ' WHERE';
+      }
+      sql += ' hospital_name LIKE ?';
       array.push('%' + keyword + '%');
     }
+
     if (p && page_size) {
       sql += ' LIMIT ?,?';
       array = array.concat([(p - 1) * page_size, p * page_size]);

@@ -31,6 +31,13 @@ class RosterDoctorController extends Controller {
     ctx.status = 200;
   }
 
+  async getTicket() {
+    const ctx = this.ctx;
+    const result = await ctx.service.rosterDoctor.getTicket(ctx.request.query);
+    ctx.body = result;
+    ctx.status = 200;
+  }
+
   async rosterDoctorList() {
     const ctx = this.ctx;
     const result = await ctx.service.rosterDoctor.rosterDoctorList(ctx.request.query);

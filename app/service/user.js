@@ -120,7 +120,7 @@ class UserService extends Service {
     let sql = `UPDATE user SET ${data.key} = ? WHERE open_id = (SELECT open_id FROM wx_token WHERE token = ?)`;
     let array = [data.value, data.token];
     if (data.key == 'balance') {
-      sql = `UPDATE user SET balance = balance ${data.tag == 'add' ? '+' : '-'} ? WHERE open_id = (SELECT open_id FROM wx_token WHERE token = ?)`;
+      sql = `UPDATE user SET balance = balance ${data.tag && data.tag == 'add' ? '+' : '-'} ? WHERE open_id = (SELECT open_id FROM wx_token WHERE token = ?)`;
     }
     const result = await this.app.mysql.query(sql, array);
     if (result.affectedRows === 1) {
